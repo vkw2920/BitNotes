@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  cron:
+    build: ./Cron
+    environment:
+      - DB_SERVER=database
+      - DB_USERNAME=root
+      - DB_PASSWORD=15tAi5W2
+      - DB_DATABASE=Notes
+    volumes:
+      - ./Snaphots:/mnt/snapshots:rw
+  webassembly:
+    build: ./WebAssembly
+    environment:
+      - ASPNET_CORE_ENVIRONMENT=Debug
+    ports:
+      - "8080:80"
+  serverapi:
+    build: ./ServerAPI
+    environment:
+      - DB_SERVER=database
+      - DB_USERNAME=root
+      - DB_PASSWORD=15tAi5W2
+      - DB_DATABASE=Notes
+    volumes:
+      - ./ServerAPI_Temp:/mnt/temp:rw
+  database:
+    build: ./Database
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=15tAi5W2
+      - POSTGRES_DB=Notes
+      - PGDATA=/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./Database_Files:/var/lib/postgresql/datahealthcheck
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
