@@ -11,5 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.14"
+  },
+  "dependencies": {
+    "pg": "^8.11.0",
+    "pg-error": "^1.1.0",
+    "postgres": "^3.3.4"
   }
 }

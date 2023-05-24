@@ -4,6 +4,6 @@ WORKDIR /app
 
 RUN npm i postgres
 
-COPY ./test.js /app/test.js
+COPY . .
 
-CMD [ "node", "test.js" ]
+CMD [ "npm", "start" ]

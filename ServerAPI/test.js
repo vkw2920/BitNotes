@@ -1,69 +1,15 @@
-const fs = require('fs');
-const path = require('path');
+const pg = require("pg");
 
-const writeFile = async (path, data) => {
-    return new Promise((resolve, reject) => {
-        fs.writeFile(path, data, (err) => {
-            if (err) {
-                console.log("Have an error: " + err.toString());
-                reject();
-            } else {
-                console.log("Writing to file finished successfuly");
-                resolve();
-            }
-        });
-    });
-}
+var client = new pg.Client({user:'notes_user', password:'15tAi5W2', host:'localhost', port:5432, database:'notes'});
 
-const appendFile = async (path, data) => {
-    return new Promise((resolve, reject) => {
-        fs.appendFile(path, data, (err) => {
-            if (err) {
-                console.log("Have an error: " + err.toString());
-                reject();
-            } else {
-                console.log("Appending to file finished successfuly");
-                resolve();
-            }
-        });
-    });
-}
+client.connect()
+    .then(() => console.log("Connected!!!!"))
+    .then(() => client.query("select * from users_table;"))
+    .then((data) => console.log(data.rows[0].username))
+    .catch((err) => console.log(err));
 
-const readFile = async (path) => {
-    return new Promise((resolve, reject) => {
-        fs.readFile(path, {encoding:'utf-8'}, (err, data) => {
-            if (err) {
-                console.log("Have an error: " + err.toString());
-                reject();
-            } else {
-                console.log("File read operation performed successfuly");
-                resolve(data);
-            }
-        });
-    });
-}
 
-const rmFile = async (path) => {
-    return new Promise((resolve, reject) => {
-        fs.rm(path, (err) => {
-            if (err) {
-                console.log("Have an error: " + err.toString());
-                reject();
-            } else {
-                console.log("File removing finished successfuly");
-                resolve();
-            }
-        });
-    });
-}
 
-writeFile(path.join(__dirname, "TestFile.txt"), "TestData1\n")
-    .then(() => appendFile(path.join(__dirname, "TestFile.txt"), "Test number 2\n"))
-    .then(() => appendFile(path.join(__dirname, "TestFile.txt"), "Test number 2\n"))
-    .then(() => appendFile(path.join(__dirname, "TestFile.txt"), "Test number 2\n"))
-    .then(() => appendFile(path.join(__dirname, "TestFile.txt"), "Test number 2\n"))
-    .then(() => appendFile(path.join(__dirname, "TestFile.txt"), "Test number 2\n"))
-    .then(() => readFile(path.join(__dirname, "TestFile.txt")))
-    .then((data) => console.log(data))
-    .then(() => rmFile(path.join(__dirname, "TestFile.txt")))
-    .catch(() => console.log("Have an error. Check messages below"));
+
+
+

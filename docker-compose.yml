@@ -1,45 +1,52 @@
 version: '3'
 
 services:
-  cron:
-    build: ./Cron
-    environment:
-      - DB_SERVER=database
-      - DB_PORT=5432
-      - DB_USERNAME=root
-      - DB_PASSWORD=15tAi5W2
-      - DB_DATABASE=Notes
-    volumes:
-      - ./Snaphots:/mnt/snapshots:rw
-  webassembly:
-    build: ./WebAssembly
-    environment:
-      - ASPNET_CORE_ENVIRONMENT=Debug
-    ports:
-      - "8080:80"
+  # cron:
+  #   build: ./Cron
+  #   environment:
+  #     - DB_SERVER=database
+  #     - DB_PORT=5432
+  #     - DB_USERNAME=notes_user
+  #     - DB_PASSWORD=15tAi5W2
+  #     - DB_DATABASE=notes
+  #   volumes:
+  #     - ./Snaphots:/mnt/snapshots:rw
+
+  # webassembly:
+  #   build: ./WebAssembly
+  #   environment:
+  #     - ASPNET_CORE_ENVIRONMENT=Debug
+  #     - API_PORT=5147
+  #   ports:
+  #     - "8080:80"
+
   serverapi:
     build: ./ServerAPI
     environment:
       - DB_SERVER=database
-      - DB_USERNAME=root
+      - DB_PORT=5432
+      - DB_USERNAME=notes_user
       - DB_PASSWORD=15tAi5W2
-      - DB_DATABASE=Notes
+      - DB_DATABASE=notes
       - PORT=5147
     volumes:
       - ./ServerAPI_Temp:/mnt/temp:rw
+    ports:
+      - "5147:5147"
+
   database:
     build: ./Database
     environment:
-      - POSTGRES_USER=root
+      - POSTGRES_USER=notes_user
       - POSTGRES_PASSWORD=15tAi5W2
-      - POSTGRES_DB=Notes
+      - POSTGRES_DB=notes
       - PGDATA=/var/lib/postgresql/data
     ports:
       - "5432:5432"
     volumes:
       - ./Database_Files:/var/lib/postgresql/datahealthcheck
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      test: ["CMD-SHELL", "pg_isready -U notes_user -d notes"]
       interval: 10s
       timeout: 5s
       retries: 5
