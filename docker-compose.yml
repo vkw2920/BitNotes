@@ -5,6 +5,7 @@ services:
     build: ./Cron
     environment:
       - DB_SERVER=database
+      - DB_PORT=5432
       - DB_USERNAME=root
       - DB_PASSWORD=15tAi5W2
       - DB_DATABASE=Notes
@@ -23,6 +24,7 @@ services:
       - DB_USERNAME=root
       - DB_PASSWORD=15tAi5W2
       - DB_DATABASE=Notes
+      - PORT=5147
     volumes:
       - ./ServerAPI_Temp:/mnt/temp:rw
   database:

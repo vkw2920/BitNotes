@@ -1,0 +1,3 @@
+# NPM packages can be installed with `npm i`
+node_modules/*
+package-lock.json
